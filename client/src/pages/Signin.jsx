@@ -1,11 +1,135 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function Signin() {
+function SignIn() {
+  const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    // Validate form data
+    if (!formData.email || !formData.password) {
+      setTimeout(() => {
+        setError('Please fill in all fields');
+        setLoading(false);
+      }, 500);
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || 'Something went wrong');
+        return;
+      }
+
+      // Success - redirect to home or dashboard
+      console.log('Signin successful:', data);
+      navigate('/'); // Redirect to home page
+
+    } catch (err) {
+      setError('Network error. Please try again.');
+      console.error('Signin error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div>
-      Signin    
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">Sign in</h1>
+          <p className="text-sm text-gray-500">Welcome back, please sign in</p>
+        </div>
+
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              {error}
+            </div>
+          )}
+
+          <input
+            type="email"
+            placeholder="Email"
+            name="email"
+            className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={handleChange}
+            required
+          />
+
+          <div className="flex items-center justify-between">
+            <label className="flex items-center">
+              <input type="checkbox" className="form-checkbox text-blue-500" />
+              <span className="ml-2 text-sm text-gray-600">Remember me</span>
+            </label>
+            <a href="#" className="text-sm text-blue-600 hover:underline">
+              Forgot password?
+            </a>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Signing in...' : 'Sign in'}
+          </button>
+        </form>
+
+        <div className="my-6 border-t text-center relative">
+          <span className="absolute left-1/2 -top-3 transform -translate-x-1/2 bg-white px-2 text-sm text-gray-400">
+            OR ACCESS QUICKLY
+          </span>
+        </div>
+
+        <div className="flex gap-4">
+          <button className="w-full border border-gray-300 p-3 rounded-md text-sm hover:bg-gray-100">
+            Google
+          </button>
+          <button className="w-full border border-gray-300 p-3 rounded-md text-sm hover:bg-gray-100">
+            LinkedIn
+          </button>
+          <button className="w-full border border-gray-300 p-3 rounded-md text-sm hover:bg-gray-100">
+            SSO
+          </button>
+        </div>
+
+        <p className="mt-6 text-sm text-center text-gray-600">
+          Don't have an account?{' '}
+          <a href="/sign-up" className="text-blue-600 hover:underline">
+            Sign up
+          </a>
+        </p>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Signin
+export default SignIn;
