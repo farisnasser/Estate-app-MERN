@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {signinStart, signinSuccess, signinFailure} from '../redux/user/userSlice.js';
 
 function SignIn() {
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  //const [loading, setLoading] = useState(false);
+  //const [error, setError] = useState(null);// instead of using these, we use the state from the redux store
+  const {loading, error} = useSelector((state) => state.user);  
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
+    //setLoading(true);// Here instead of setting loading to true, we dispatch the signinStart action
+    dispatch(signinStart());
 
     // Validate form data
     if (!formData.email || !formData.password) {
-      setTimeout(() => {
-        setError('Please fill in all fields');
-        setLoading(false);
-      }, 500);
+      dispatch(signinFailure('Please fill in all fields'));
       return;
     }
 
@@ -36,22 +36,22 @@ function SignIn() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || 'Something went wrong');
+        dispatch(signinFailure(data.message || 'Something went wrong'));
         return;
       }
 
+      dispatch(signinSuccess(data));
       // Success - redirect to home or dashboard
       console.log('Signin successful:', data);
       navigate('/'); // Redirect to home page
 
     } catch (err) {
-      setError('Network error. Please try again.');
+      dispatch(signinFailure(err.message || 'Something went wrong'));
       console.error('Signin error:', err);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
+  console.log(error);     
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
