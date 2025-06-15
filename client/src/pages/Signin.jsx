@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {signinStart, signinSuccess, signinFailure} from '../redux/user/userSlice.js';
+import OAuth from '../components/OAuth.jsx';
 
 function SignIn() {
   const [formData, setFormData] = useState({});
@@ -109,17 +110,8 @@ function SignIn() {
           </span>
         </div>
 
-        <div className="flex gap-4">
-          <button className="w-full border border-gray-300 p-3 rounded-md text-sm hover:bg-gray-100">
-            Google
-          </button>
-          <button className="w-full border border-gray-300 p-3 rounded-md text-sm hover:bg-gray-100">
-            LinkedIn
-          </button>
-          <button className="w-full border border-gray-300 p-3 rounded-md text-sm hover:bg-gray-100">
-            SSO
-          </button>
-        </div>
+          <OAuth />
+
 
         <p className="mt-6 text-sm text-center text-gray-600">
           Don't have an account?{' '}

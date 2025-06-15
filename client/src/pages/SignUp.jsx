@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import OAuth from '../components/OAuth';
 
 function SignUp() {
 
@@ -165,17 +166,7 @@ function SignUp() {
           </span>
         </div>
 
-        <div className="flex gap-4">
-          <button className="w-full border border-gray-300 p-3 rounded-md text-sm hover:bg-gray-100">
-            Google
-          </button>
-          <button className="w-full border border-gray-300 p-3 rounded-md text-sm hover:bg-gray-100">
-            LinkedIn
-          </button>
-          <button className="w-full border border-gray-300 p-3 rounded-md text-sm hover:bg-gray-100">
-            SSO
-          </button>
-        </div>
+        <OAuth/>
 
         <p className="mt-6 text-sm text-center text-gray-600">
           Already have an account?{' '}

@@ -1,0 +1,10 @@
+1) First we created an empty repository. inside this repo we created the react projcet using vite with the following command
+    npm create vite@latest client
+    this is called the client folder which is basically the frontend folder
+    Next we installed the tailwind css requirements
+2) Now we have the repo on our computer, we want to push it to github. we go to github and create the repository. To push the existing repo 
+    on our computer to github from the command line we use
+        'git remote add origin githublinkhere'
+        'git branch -M main'
+        'git push -u origin main'
+3) Next we created a pages folder in src in the client side and added all the necessary pages we need for the project

@@ -52,3 +52,28 @@ export const signin = async (req,res,next) => {
         next(error);
     }
 }
+
+export const google = async (req,res,next) => {
+    try {
+
+        const user = await User.findOne({email: req.body.email}); //this function finds the user in the DB and returns the user object
+        if (user) {//if the user exists in the DB, we will return the user object
+            const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
+            const {password: pass, ...rest} = user._doc; //seperates the password from the user object
+            res.cookie("access_token", token, {httpOnly: true}).status(200).json(rest);
+        }   
+        else { //otherwise, we have to create a new password for the user since our user model has password as a required field
+            const generatedPassword = Math.random().toString(36).substring(2,15) + Math.random().toString(36).substring(2,15);
+            const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+            const newUser = new User({username: req.body.name.split(" ").join("").toLowerCase() + Math.random().toString(36).substring(2,15) , email: req.body.email, password: hashedPassword, avatar: req.body.photo});
+            await newUser.save();
+            const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET);
+            const {password: pass, ...rest} = newUser._doc;
+            res.cookie("access_token", token, {httpOnly: true}).status(200).json(rest);
+        }
+
+        
+    } catch (error) {
+        next(error);
+    }
+}
