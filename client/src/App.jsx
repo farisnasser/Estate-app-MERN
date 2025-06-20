@@ -5,6 +5,7 @@ import Signin from './pages/Signin'
 import SignUp from './pages/SignUp'   
 import Profile from './pages/Profile.jsx'
 import Header from './components/Header.jsx'  
+import PrivateRoute from './components/privateRoute.jsx'
 function App() {
   return (
     <BrowserRouter>
@@ -16,7 +17,11 @@ function App() {
             <Route path='/about' element={<About />} />
             <Route path='/sign-in' element={<Signin />} />
             <Route path='/sign-up' element={<SignUp />} />
-            <Route path='/profile' element={<Profile />} />
+            <Route element={<PrivateRoute />} >
+              <Route path='/profile' element={<Profile />} /> 
+              //so now if the user tries to access the profile page, they will be redirected to the privateroute component 
+            </Route>
+
           </Routes>
         </main>
       </div>
