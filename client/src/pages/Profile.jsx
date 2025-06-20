@@ -1,16 +1,26 @@
 import React from 'react';
-
+import { useSelector } from 'react-redux';
 export default function Profile() {
+
+  const {currentUser} = useSelector((state) => state.user);
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-gray-900">Profile Settings</h2>
+        {/* Header */}
+        <div className="flex flex-col items-center">
+          <img
+            className="h-28 w-28 rounded-full object-cover border-4 border-indigo-600 shadow-md"
+            src={currentUser.avatar}
+            alt="Profile"
+          />
+          <h2 className="mt-4 text-3xl font-extrabold text-gray-900">Profile Settings</h2>
           <p className="mt-2 text-sm text-gray-600">
             Manage your account information
           </p>
         </div>
 
+        {/* Card */}
         <div className="bg-white shadow-lg rounded-lg p-8 space-y-8">
           {/* Form */}
           <form className="space-y-6">
