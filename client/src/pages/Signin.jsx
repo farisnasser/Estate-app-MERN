@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {signinStart, signinSuccess, signinFailure} from '../redux/user/userSlice.js';
 import OAuth from '../components/OAuth.jsx';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 function SignIn() {
   const [formData, setFormData] = useState({});
@@ -41,6 +42,7 @@ function SignIn() {
         return;
       }
 
+      await signInWithEmailAndPassword(auth, formData.email, formData.password);
       dispatch(signinSuccess(data));
       // Success - redirect to home or dashboard
       console.log('Signin successful:', data);
